@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# /etc/rc.d/rc.proxee
+#
+# Start/stop/restart the proxee daemon
+#
+# To make proxee start automatically at boot, make this
+# file executable:  chmod 755 /etc/rc.d/rc.proxee
+#
+
+
+# this is actually fully working now, thanks to the daemons proper signal handling.
+
+
+# change this to /usr/sbin/proxee when its a functional daemon.
+proxee_start() {
+  if [ -x ./proxee ]; then
+    echo "Starting proxee:  ./proxee"
+    ./proxee
+  else
+    echo "./proxee not found."
+  fi
+}
+
+proxee_stop() {
+  echo "Stopping proxee:  ./proxee"
+  killall proxee
+}
+
+proxee_restart() {
+  proxee_stop
+  sleep 2
+  proxee_start
+}
+
+case "$1" in
+'start')
+  proxee_start
+  ;;
+'stop')
+  proxee_stop
+  ;;
+'restart')
+  proxee_restart
+  ;;
+*)
+  # Default is "start", for backwards compatibility with previous
+  # Slackware versions.  This may change to a 'usage' error someday.
+  proxee_start
+esac
+
